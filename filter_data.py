@@ -6,9 +6,11 @@ import datetime as dt
 
 df = pd.read_csv(r"C:\Users\aaron\Downloads\Fall 2021 - Spring 2022.csv")
 
+
+
 df['date_published'] = pd.to_datetime(df['Page'].str[:11], errors='coerce')
 
-categorys = df[df['Page'].str[1:9] == 'category']
+#categorys = df[df['Page'].str[1:9] == 'category']
 
 # frpm 72k to 53k observations after getting ones with known published dates
 df = df[df['date_published'].notnull()]
@@ -67,9 +69,30 @@ df2 = df2.groupby('Page Title')
 # print(df2['Pageviews'].value_counts())
 df3 = pd.DataFrame(df2.sum(),columns=['Pageviews', 'Organic Searches', 'Users', 'New Users'])
 df3 = df3.join(pd.DataFrame(df2.max(),columns=['Avg. Session Duration', 'date_published', 'Page']))
+
+categories = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\Fall 2021 - Spring 2023 Data bad.csv")
+categories = categories[['Page Title', 'category']]
+categories = categories.drop_duplicates(subset='Page Title')
+print(len(df3))
+df3 = pd.merge(df3, categories, on='Page Title', how='left')
+print(len(df3))
+
+df3 = df3[(df3['Pageviews'] > 50)]#& (df3['Avg. Session Duration'] > 0)]
+print(len(df3))
+df3 = df3[df3['category'].notnull()]
+print(len(df3))
+
 df3.to_excel('c:/Users/aaron/OneDrive/Documents/quest/dbk_consulting/merged_titles.xlsx')
 
-#plt.show()
+
+# mean normalization
+#plt.scatter(((df3['Pageviews'] - df3['Pageviews'].mean()) / df3['Pageviews'].std()), ((df3['Avg. Session Duration'] - df3['Avg. Session Duration'].mean()) / df3['Pageviews'].std()))
+
+# min max normalization 
+plt.scatter(((df3['Pageviews'] - df3['Pageviews'].min()) / (df3['Pageviews'].max() - df3['Pageviews'].min())), ((df3['Avg. Session Duration'] - df3['Avg. Session Duration'].min()) / (df3['Avg. Session Duration'].max() - df3['Avg. Session Duration'].min())))
+
+
+plt.show()
 #fig.savefig('c:/Users/aaron/OneDrive/Documents/quest/dbk_consulting/graph.png', transparent=True, dpi=200)
 #plt.show()
 
@@ -77,3 +100,7 @@ df3.to_excel('c:/Users/aaron/OneDrive/Documents/quest/dbk_consulting/merged_titl
 
 #print(df)
 #40k observations published later than 2021
+
+
+# Hypothesis testing
+# df3 = df3[~df3['Page TItle'].str.contains('UMD')]
