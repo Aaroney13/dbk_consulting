@@ -1,3 +1,9 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
+import numpy as np
+import datetime as dt
+
 # Goals
 # 1. Automate the regression (organic searches and page views)
 # 2. Automate output of 
