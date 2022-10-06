@@ -82,7 +82,7 @@ print(len(df3))
 df3 = df3[df3['category'].notnull()]
 print(len(df3))
 
-df3.to_excel('c:/Users/aaron/OneDrive/Documents/quest/dbk_consulting/merged_titles.xlsx')
+#df3.to_excel('c:/Users/aaron/OneDrive/Documents/quest/dbk_consulting/merged_titles.xlsx')
 
 
 # mean normalization
