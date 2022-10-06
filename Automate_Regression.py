@@ -22,6 +22,6 @@ import datetime as dt
 # startime [pd.datetime(12, 20, 2001) ]
 # endtime [pd.datetime(12, 20, 2001) ]
 # categories ['', '']
-# for x in range (0, len(startime)):
+# for date_pos in range (0, len(startime)):
 #   for category in categories:
-#       regres(startime[0], endtime[0], categories)
+#       regres(startime[date_pos], endtime[date_pos], category)
