@@ -25,7 +25,7 @@ writer = pd.ExcelWriter(os.getcwd() + '/Top_Headlines/' + 'toplist.xlsx', mode='
 
 # function that produces graphs
 # input category and start time and end time frame, save location -> output graph (PNG), list of headlines (CSV) above the line
-def regres(start_time, end_time, category, save_location, n, end):
+def regres(start_time, end_time, category, n, end):
 
     # Get headlines published within range, date_string = naming schema
     df2 = df[(df['date_published'] >= start_time) & (df['date_published'] <= end_time)]
@@ -53,7 +53,7 @@ def regres(start_time, end_time, category, save_location, n, end):
 
     # Global dataframe for each category, later written to excel for each sheet
     global df3
-    df3 = df3.append(df2[df2['Organic Searches'] > df2['predict']])
+    df3 = df3.concat(df2[df2['Organic Searches'] > df2['predict']])
     if n == 0:
         if end == 0:
             print(df3)
@@ -91,7 +91,7 @@ for category in categories:
     global df3
     df3 = pd.DataFrame()
     for date_pos in range (0, (len(date_range) - 1)):
-        regres(date_range[date_pos], date_range[date_pos + 1], category, 'dbk_consulting/',date_pos, end)
+        regres(date_range[date_pos], date_range[date_pos + 1], category, date_pos, end)
 
 # Saving list excel writer
 writer.save()
