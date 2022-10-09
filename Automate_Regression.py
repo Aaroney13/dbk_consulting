@@ -21,7 +21,7 @@ df = df.drop(df.columns[0], axis=1)
 df['date_published'] = pd.to_datetime(df['date_published'])
 
 # Writer for graphs
-writer = pd.ExcelWriter(os.getcwd() + '/Top_Headlines/' + 'toplist.xlsx')
+writer = pd.ExcelWriter(os.getcwd() + '/Top_Headlines/' + 'toplist.xlsx', mode='a', if_sheet_exists='replace')
 
 # function that produces graphs
 # input category and start time and end time frame, save location -> output graph (PNG), list of headlines (CSV) above the line
@@ -68,6 +68,7 @@ def regres(start_time, end_time, category, save_location, n, end):
     plt.ylabel('Organic Searches')
     plt.plot(df2['date_published'], ridge.predict(X_val), color="blue", linewidth=1, label='predicted')
     plt.plot(df2['date_published'], df2['median'], color="red", linewidth=1, label='median')
+    plt.legend()
     plt.savefig(os.getcwd() + '/Top_Headlines/' + category + date_string + '.png')
    # plt.show()
     plt.clf()
@@ -85,7 +86,7 @@ print(end)
 # for loop
 # Input array of categories and array time frames (pandas datetime objects) to regres
 # Calls regres function on all date ranges for each category
-categories = ['campus', 'news']
+categories = ['diversions']#, 'news']
 for category in categories:
     global df3
     df3 = pd.DataFrame()
