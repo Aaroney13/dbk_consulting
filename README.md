@@ -1,5 +1,5 @@
 # dbk_consulting
-Code for consulting project with the DiamondBack Newspaper
+Code for consulting project with the DiamondBack Newspaper.  
 Question: What words should be used to create headlines that get more views?
 
 # Things to do:
@@ -24,3 +24,6 @@ Automated finding of most popular headlines for each time period (quarter):
 Automated wordcloud generation to visually find appealing words for hypothesis testing
 - word_cloud_generator.py
 - output word clouds to word_clouds folder
+
+Test, is there a correlation between higher no. keywords and views:
+- test_keyword_occurances.py - in progress
