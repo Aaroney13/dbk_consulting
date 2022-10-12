@@ -8,7 +8,7 @@ import os
 
 os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\word_clouds")
 xls = pd.ExcelFile(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\Top_Headlines\toplist.xlsx")
-categories = ['campus', 'diversions', 'news']
+categories = ['local',  'column', 'tv', 'opinion', 'music', 'campus-life', 'sports']
 for category in categories:
     df1 = pd.read_excel(xls, category)
     df1['Page Title'] = df1['Page Title'].str.lower()

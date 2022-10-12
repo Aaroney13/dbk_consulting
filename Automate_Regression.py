@@ -26,12 +26,12 @@ writer = pd.ExcelWriter(os.getcwd() + '/Top_Headlines/' + 'toplist.xlsx', mode='
 # function that produces graphs
 # input category and start time and end time frame, save location -> output graph (PNG), list of headlines (CSV) above the line
 def regres(start_time, end_time, category, n, end):
-
+    print(category)
     # Get headlines published within range, date_string = naming schema
     df2 = df[(df['date_published'] >= start_time) & (df['date_published'] <= end_time)]
     df2 = df2[df2['category'].str.contains(category)]
     date_string = str(start_time)[:10] + '_' + str(end_time)[:10]
-
+    print(len(df2))
     # Reshaping and fitting data to ridge regression
     df2['date_published_reg'] = df2['date_published'].map(dt.datetime.toordinal)
     X_val = df2['date_published_reg'].values.reshape(-1, 1)
@@ -53,7 +53,8 @@ def regres(start_time, end_time, category, n, end):
 
     # Global dataframe for each category, later written to excel for each sheet
     global df3
-    df3 = df3.concat(df2[df2['Organic Searches'] > df2['predict']])
+
+    df3 = pd.concat([df3, df2[df2['Organic Searches'] > df2['predict']]])
     if n == 0:
         if end == 0:
             print(df3)
@@ -62,14 +63,14 @@ def regres(start_time, end_time, category, n, end):
         df3.to_excel(writer,  sheet_name=category, index=False)
 
     # graph creation
-    plt.scatter(df2['date_published'], df2['Organic Searches'], alpha=.4)
-    plt.title(date_string + ' ' + category)
-    plt.xlabel('date')
-    plt.ylabel('Organic Searches')
-    plt.plot(df2['date_published'], ridge.predict(X_val), color="blue", linewidth=1, label='predicted')
-    plt.plot(df2['date_published'], df2['median'], color="red", linewidth=1, label='median')
-    plt.legend()
-    plt.savefig(os.getcwd() + '/Top_Headlines/' + category + date_string + '.png')
+    # plt.scatter(df2['date_published'], df2['Organic Searches'], alpha=.4)
+    # plt.title(date_string + ' ' + category)
+    # plt.xlabel('date')
+    # plt.ylabel('Organic Searches')
+    # plt.plot(df2['date_published'], ridge.predict(X_val), color="blue", linewidth=1, label='predicted')
+    # plt.plot(df2['date_published'], df2['median'], color="red", linewidth=1, label='median')
+    # plt.legend()
+    # plt.savefig(os.getcwd() + '/Top_Headlines/' + category + date_string + '.png')
    # plt.show()
     plt.clf()
 
@@ -86,7 +87,7 @@ print(end)
 # for loop
 # Input array of categories and array time frames (pandas datetime objects) to regres
 # Calls regres function on all date ranges for each category
-categories = ['diversions']#, 'news']
+categories = ['local',  'column', 'tv', 'opinion', 'music', 'campus-life', 'sports']#, 'news']
 for category in categories:
     global df3
     df3 = pd.DataFrame()
