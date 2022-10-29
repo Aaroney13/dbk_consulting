@@ -17,6 +17,7 @@ import statistics
 # Original dataset with headlines and pageviews/organic searches
 os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
 df = pd.read_excel(os.getcwd() + '/merged_titles.xlsx')
+print(df)
 df = df.drop(df.columns[0], axis=1)
 df['date_published'] = pd.to_datetime(df['date_published'])
 
@@ -42,11 +43,9 @@ def regres(start_time, end_time, category, n, end):
     reg = LinearRegression().fit(X_val, Y_val)
     print(reg.coef_)
 
-    # Static median to show on graph
-    df2['median'] = statistics.median(df2['Organic Searches'])
-
     # Column with predicted regression values
     df2['predict'] = ridge.predict(X_val).flatten()
+    df2['residuals'] = df2['predict'] - df2['Organic Searches']
     df2['period'] = date_string
     print(n)
     print(end)
