@@ -3,10 +3,9 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import os
 os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
-df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\Data for QUEST team Aug. 30, 2020 - Sept. 30 2022.csv")
+df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\test_data.csv")
 
-df = df.iloc[:, 2:]
-#df = df.merge(df['category'].str.get_dummies(','), how='left', left_index=True, right_index=True)
+df = df.merge(df['category'].str.get_dummies(','), how='left', left_index=True, right_index=True)
 
 df['Page Title'] = df['Page Title'].str.lower()
 def addDummy(words):
