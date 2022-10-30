@@ -8,7 +8,7 @@ os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
 # Goal: test keywords to see if mean is higher than complement in group
 writer = pd.ExcelWriter(os.getcwd() + '/logcheck.xlsx', mode='a', if_sheet_exists='replace')
 
-os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
+
 df = pd.read_excel(os.getcwd() + '/merged_titles.xlsx', sheet_name='Sheet1')
 df = df.drop(df.columns[0], axis=1)
 df['Page Title'] = df['Page Title'].str.lower()

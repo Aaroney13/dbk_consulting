@@ -1,6 +1,8 @@
 import pandas as pd
 import statsmodels.api as sm 
-
+import matplotlib.pyplot as plt
+import os
+os.chdir(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\Data for QUEST team Aug. 30, 2020 - Sept. 30 2022.csv")
 
 df = df.iloc[:, 2:]
@@ -13,12 +15,21 @@ def addDummy(words):
 
 addDummy(['umd', 'student', 'dorm', 'covid', 'housing', 'college park', 'review', 'dot'])
 
-X = df.iloc[:, 11:]
-y = df['Pageviews'] 
-# ## fit a OLS model
-X = sm.add_constant(X) 
-est = sm.OLS(y, X).fit() 
+# X = df.iloc[:, 11:]
+# y = df['Pageviews'] 
 
-print(est.summary())
+# #y = df['Organic Searches']
+# # ## fit a OLS model
+# X = sm.add_constant(X) 
+# est = sm.OLS(y, X).fit() 
+
+corr_matrix = df.corr()
+print(corr_matrix)
+ 
+#Using heatmap to visualize the correlation matrix
+plt.imshow(corr_matrix)
+corr_matrix.to_csv(os.getcwd() + '/matrix.csv')
+plt.show()
+# print(est.summary())
 
 #print()
