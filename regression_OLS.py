@@ -12,23 +12,25 @@ def addDummy(words):
     for word in words:
         df[word] = df['Page Title'].str.contains(word).astype(int)
 
-addDummy(['umd', 'student', 'dorm', 'covid', 'housing', 'college park', 'review', 'dot'])
+addDummy(['umd', 'student', 'dorm', 'covid', 'housing', 'college park', 'review', 'dot', 'semester', 'basketball', 'win', 'loss'])
+df = df.drop(columns=['period', 'residuals'])
+df = df[df['Pageviews'] < 200]
+X = df.iloc[:, 11:]
+#y = df['Pageviews'] 
 
-# X = df.iloc[:, 11:]
-# y = df['Pageviews'] 
-
-# #y = df['Organic Searches']
-# # ## fit a OLS model
-# X = sm.add_constant(X) 
-# est = sm.OLS(y, X).fit() 
+y = df['Organic Searches']
+# ## fit a OLS model
+X = sm.add_constant(X) 
+est = sm.OLS(y, X).fit() 
 
 corr_matrix = df.corr()
+
 print(corr_matrix)
- 
+print(corr_matrix.sort_values(by='Organic Searches', ascending=False).head(20))
 #Using heatmap to visualize the correlation matrix
 plt.imshow(corr_matrix)
-corr_matrix.to_csv(os.getcwd() + '/matrix.csv')
+#corr_matrix.to_csv(os.getcwd() + '/matrix.csv')
 plt.show()
-# print(est.summary())
+print(est.summary())
 
 #print()
