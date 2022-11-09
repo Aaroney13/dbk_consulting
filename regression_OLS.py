@@ -7,6 +7,9 @@ df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\test_d
 
 df = df.merge(df['category'].str.get_dummies(','), how='left', left_index=True, right_index=True)
 
+# category
+#df = df[df['category'].str.contains('diversions')]
+
 df['Page Title'] = df['Page Title'].str.lower()
 def addDummy(words):
     for word in words:
@@ -15,6 +18,8 @@ def addDummy(words):
 addDummy(['umd', 'student', 'dorm', 'covid', 'housing', 'college park', 'review', 'dot', 'semester', 'basketball', 'win', 'loss'])
 df = df.drop(columns=['period', 'residuals'])
 df = df[df['Pageviews'] < 200]
+df['sum'] = df.iloc[:, -11:].sum(axis=1)
+
 X = df.iloc[:, 11:]
 #y = df['Pageviews'] 
 
@@ -26,11 +31,10 @@ est = sm.OLS(y, X).fit()
 corr_matrix = df.corr()
 
 print(corr_matrix)
-print(corr_matrix.sort_values(by='Organic Searches', ascending=False).head(20))
+#print(corr_matrix.sort_values(by='Organic Searches', ascending=False).head(20))
 #Using heatmap to visualize the correlation matrix
 plt.imshow(corr_matrix)
 #corr_matrix.to_csv(os.getcwd() + '/matrix.csv')
 plt.show()
 print(est.summary())
 
-#print()
