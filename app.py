@@ -5,7 +5,7 @@ import textstat
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-# model building
+# model building - maybe add to a function so user can upload a new dataset to train on
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\test_data.csv")
 df['log_organic'] = np.log(df['Organic Searches'] + 1)
 df['hit'] = df['log_organic'] > 1
@@ -76,6 +76,7 @@ incorrect = ((y_test.astype(int)['hit'] - predictions_to_int) == 0).value_counts
 
 # function, takes user input returns if its a hit or not
 def prediction(input):
+    # model predict must take a dataframe but user input could be put into df here
     predict = Model.predict(input)
     # change based on input
     input_to_int = predict.apply(lambda x: 1 if x > .6 else 0)
@@ -83,7 +84,8 @@ def prediction(input):
 
 
 # insert app visualizations
-
+# Use app GUI, try and make sure it could be run in a notebook for them
+# they should be able to put in new training data so long as it fits format
 print(predictions)
 
 # things to print in app
