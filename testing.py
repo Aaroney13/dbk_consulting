@@ -1,10 +1,19 @@
-import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 import textstat
-import matplotlib.pyplot as plt
+from tensorflow import keras
+from keras.layers import Embedding, SpatialDropout1D, LSTM
+from keras.layers import Dense
+from keras.models import Model
+from keras.callbacks import EarlyStopping
+from keras.preprocessing.text import Tokenizer
+from keras.utils import pad_sequences
+from keras import Sequential
 from sklearn.model_selection import train_test_split
 
+# ASK ABOUT dates
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\test_data.csv")
 #df['Organic Searches'].plot.kde()
 df['log_organic'] = np.log(df['Organic Searches'] + 1)
@@ -13,89 +22,82 @@ df['question_mark']=0
 df['hit'] = df['log_organic'] > 1
 
 
-df['diversions'] = df['category'].str.contains('diversions')
-df['question_mark'] = df['Page Title'].str.contains('\?')
-
 df['date_published'] = pd.to_datetime(df['date_published'])
-#df = df[df['date_published'].dt.year >= 2020]
 
-df['spring_semester'] = ((df['date_published'].dt.month > 1) & (df['date_published'].dt.month < 6))
-df['fall_semester'] = ((df['date_published'].dt.month > 8) & (df['date_published'].dt.month < 13))
-df['off_season'] = ~(df['fall_semester'] | df['spring_semester'])
-df['question_diversions'] = df['diversions'] * df['question_mark']
-
-
-complexity_list = []
-def complexity(df_):
-    #complexity_list.append(textstat.flesch_kincaid_grade(df_))
-    complexity_list.append(textstat.flesch_reading_ease(df_))
-    return df_
-   #complexity_list.append(textstat.smog_index(df_))
-df['Page Title'].apply(lambda x: complexity(x))
-df['complexity'] = complexity_list
-
-df['complexity_hard'] = (df['complexity'] <= 60).astype(bool)
-df['complexity_easy'] = (df['complexity'] >= 70).astype(bool)
-
-df['complexity_standard'] = ((df['complexity'] >= 60) & (df['complexity'] < 70)).astype(bool)
-df['complexity_easy'] = ((df['complexity'] >= 70) & (df['complexity'] < 80)).astype(bool)
-df['complex_spring_standard'] = df['complexity_standard'] & df['spring_semester']
-df['complex_fall_standard'] = df['complexity_standard'] & df['fall_semester']
-df['complex_spring_easy'] = df['complexity_easy'] & df['spring_semester']
-df['complex_fall_easy'] = df['complexity_easy'] & df['fall_semester']
-df['complex_off_standard'] = df['complexity_standard'] & df['off_season']
-df['complex_off_easy'] = df['complexity_easy'] & df['off_season']
-df['contain_review'] = df['Page Title'].str.contains('Review', case=False)
-df['contain_sga'] = df['Page Title'].str.contains('SGA', case=False)
-df['contain_umd'] = df['Page Title'].str.contains('UMD', case=False)
-df['contain_num'] = df['Page Title'].str.contains('\d+')
-print(df['contain_umd'])
-#rint(complexity_list)
-
-YVar = df[['hit']]
-# df['aa'] = np.asarray(df['complexity'])
-# df['aa'].to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\aa.csv")
-XVar = df[['spring_semester', 'fall_semester', 'complex_off_standard', 'question_mark', 'contain_review',  'complexity_hard', 'contain_umd', 'complex_fall_easy', 'complex_spring_easy']]
-
-X_train, X_test, y_train, y_test = train_test_split(XVar, YVar, test_size=0.2)
-
-#print(df[['Organic Searches', 'spring_semester', 'fall_semester', 'off_season', 'complexity', 'complex_spring', 'complex_fall']].corr())
-# #XVar = sm.add_constant(XVar)
-print(y_train)
-#Model = sm.Logit(YVar, XVar).fit()
-Model = sm.Logit(y_train, X_train).fit()
-
-predictions = Model.predict(X_test)
-
-predictions_to_int = predictions.apply(lambda x: 1 if x > .6 else 0)
+#print(predictions)
+# The maximum number of words to be used. (most frequent)
+MAX_NB_WORDS = 50000
+# Max number of words in each title
+MAX_SEQUENCE_LENGTH = 250 
+# This is fixed.
+EMBEDDING_DIM = 100
+tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', lower=True)
+tokenizer.fit_on_texts(df['Page Title'].values)
+word_index = tokenizer.word_index
+print('Found %s unique tokens.' % len(word_index))
+X = tokenizer.texts_to_sequences(df['Page Title'].values)
+X = pad_sequences(X, maxlen=MAX_SEQUENCE_LENGTH)
 
 
-((y_test.astype(int)['hit'] - predictions_to_int) == 0)
-correct = ((y_test.astype(int)['hit'] - predictions_to_int) == 0).value_counts().iloc[0]
-incorrect = ((y_test.astype(int)['hit'] - predictions_to_int) == 0).value_counts().iloc[1]
+print('Shape of data tensor:', X.shape)
+y = pd.get_dummies(df['hit'])
+Y = y.values
 
-print(predictions)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
+model = Sequential()
+model.add(Embedding(MAX_NB_WORDS, EMBEDDING_DIM, input_length=X.shape[1]))
+print('layer')
+model.add(SpatialDropout1D(0.2))
+print('layer2')
+model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
+print('layer3')
+model.add(Dense(2, activation='softmax'))
+print('layer4')
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+print('layer5')
+print(X_train.shape,y_train.shape)
+print(X_test.shape,y_test.shape)
+
+# set epochs
+epochs = 1
+batch_size = 64
+
+history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size,validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
+
+accr = model.evaluate(X_test,y_test)
+print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(accr[0],accr[1]))
 #plt.scatter(predictions.index, predictions)
 #plt.show()
 #print((y_test.astype(int) - predictions.astype(int)))
 #print(predictions)
 ##print(y_test)
 #((y_test - predictions) != 0).to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\predicted_wrong.csv")
+# print(df['hit'])
+# print(Y)
+new_headline = ['bad headline this is bad headline baddddddddddddddddddd headline']
+seq = tokenizer.texts_to_sequences(new_headline)
+padded = pad_sequences(seq, maxlen=MAX_SEQUENCE_LENGTH)
+pred = model.predict(padded)
+labels = []
+print(y.columns)
+for val in y.columns:
+    if val == True:
+        labels.append('not hit')
+    else:
+        labels.append('hit')
+# first represents how much of a hit it is
+print(pred, labels[np.argmax(pred)])
+print(model.summary())
+model.save(r"C:\Users\aaron\OneDrive\Documents\quest")
 
-print(Model.summary())
-print('predicted ' + str(correct) + ' correctly and ' + str(incorrect) + ' incorrectly ' + 'this represents a ' + str(correct/len(y_test)) + ' success rate')
-# df['log_Pageviews'] = np.log(df['Pageviews'] + 1)
-# df['hit'] = df['log_Pageviews'] > 2.17
-
-# YVar = df[['hit']]
-
-# Model2 = sm.Logit(YVar, XVar).fit()
-# print(Model2.summary())
-# df['complexity'] = np.log(df['complexity'] + .1)
-# ax = df['complexity'].plot.kde()
-# get indices for incorrect guesses
-print(((y_test.astype(int)['hit'] - predictions_to_int) != 0).where(((y_test.astype(int)['hit'] - predictions_to_int) != 0)).dropna().index)
-df.loc[((y_test.astype(int)['hit'] - predictions_to_int) != 0).where(((y_test.astype(int)['hit'] - predictions_to_int) != 0)).dropna().index].to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\wrong_guesses.csv")
-
-#plt.show()
+# plt.title('Loss')
+# plt.plot(history.history['loss'], label='train')
+# plt.plot(history.history['val_loss'], label='test')
+# plt.legend()
+# plt.show()
+# plt.title('Accuracy')
+# plt.plot(history.history['acc'], label='train')
+# plt.plot(history.history['val_acc'], label='test')
+# plt.legend()
+# plt.show()
