@@ -28,6 +28,7 @@ df['hit'] = df['log_organic'] > 1
 
 
 df['date_published'] = pd.to_datetime(df['date_published'])
+df = df[df['date_published'].dt.year >= 2020]
 
 #print(predictions)
 # The maximum number of words to be used. (most frequent)
@@ -65,7 +66,7 @@ print(X_train.shape,y_train.shape)
 print(X_test.shape,y_test.shape)
 
 # set epochs
-epochs = 1
+epochs = 2
 batch_size = 64
 
 history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size,validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
@@ -94,7 +95,7 @@ for val in y.columns:
 # first represents how much of a hit it is
 print(pred, labels[np.argmax(pred)])
 print(model.summary())
-model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
+model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\model.h5")
 
 # plt.title('Loss')
 # plt.plot(history.history['loss'], label='train')
