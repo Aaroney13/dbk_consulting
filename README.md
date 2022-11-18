@@ -1,21 +1,9 @@
-# dbk_consulting
-
 <img src="https://raw.githubusercontent.com/Aaroney13/dbk_consulting/main/dbk_logo.PNG">
-Code for consulting project with the DiamondBack Newspaper.  
-Question: What words should be used to create headlines that get more views?
+Code repository for client project with the Diamondback newspaper 
 
-# Things to do:
-1. Keywords to analyze based on wordclouds for each category
-2. Test, is there a correlation between higher no. keywords and views/searches?
-3. Test, chi square, keywords in category vs non-keywords in category
-4. Test client given keywords
-5. Visualize performance of individual sports and 'gamers'
+Primary scope: How can we help the Diamondback make more successful articles
 
-# Steps Taken:
-
-Cleaned data:
-- filter_data.py cleaning steps
-- returned merged_titles.xlsx final dataset
+# Preliminary steps
 
 Automated finding of most popular headlines for each time period (quarter):
 - Automate_Regression.py
@@ -26,5 +14,13 @@ Automated wordcloud generation to visually find appealing words for hypothesis t
 - word_cloud_generator.py
 - output word clouds to word_clouds folder
 
-Test, is there a correlation between higher no. keywords and views:
-- test_keyword_occurances.py - in progress
+# What we discovered:
+- Many articles at the Diamondback are **hit or miss.**
+- While most articles may recieve a couple views, a large percentage **do not receive organic searches**
+- This can be seen with the following bimodal distribution of log(Organic Searches)
+<img src="https://raw.githubusercontent.com/Aaroney13/dbk_consulting/main/bimodal_distribution.png">
+
+# How we plan to change this
+- We categorized the articles as "hit" or "miss" depending on if they recieved more than 1 organic search within our timeframe.
+- We then used a tensorflow LSTM layered model to predict with a given article title whether or not that article would end up as a hit or miss.
+- Currently, our model has around an **80% accuracy** rate based on the test train split. This represents a significant change from a random choice of 50%.
