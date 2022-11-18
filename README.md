@@ -1,5 +1,6 @@
 # dbk_consulting
-![Diamondback Logo](/dbk_image.png?raw=true "Title" | width=100)
+![Diamondback Logo](/dbk_image.png?raw=true "Title")
+<img src="https://github.com/Aaroney13/dbk_consulting/dbk_image.png" width="48">
 Code for consulting project with the DiamondBack Newspaper.  
 Question: What words should be used to create headlines that get more views?
 
