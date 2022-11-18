@@ -89,7 +89,7 @@ for val in y.columns:
 # first represents how much of a hit it is
 print(pred, labels[np.argmax(pred)])
 print(model.summary())
-model.save(r"C:\Users\aaron\OneDrive\Documents\quest")
+model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting")
 
 # plt.title('Loss')
 # plt.plot(history.history['loss'], label='train')
