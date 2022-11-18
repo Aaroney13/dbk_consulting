@@ -1,6 +1,6 @@
 # dbk_consulting
 
-<img src="https://raw.githubusercontent.com/Aaroney13/dbk_consulting/main/dbk_logo.png" width="200">
+<img src="https://raw.githubusercontent.com/Aaroney13/dbk_consulting/main/dbk_logo.PNG" width="200">
 Code for consulting project with the DiamondBack Newspaper.  
 Question: What words should be used to create headlines that get more views?
 
