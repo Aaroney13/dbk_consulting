@@ -16,7 +16,7 @@ Automated wordcloud generation to visually find appealing words for hypothesis t
 
 # What we discovered:
 - Many articles at the Diamondback are **hit or miss.**
-- While most articles may recieve a couple views, a large percentage **do not receive organic searches**
+- While most articles may recieve a couple views, a significant percentage **do not receive organic searches**
 - This can be seen with the following bimodal distribution of log(Organic Searches)
 <img src="https://raw.githubusercontent.com/Aaroney13/dbk_consulting/main/bimodal_distribution.png">
 

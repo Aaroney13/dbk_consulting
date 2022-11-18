@@ -16,7 +16,12 @@ from sklearn.model_selection import train_test_split
 # ASK ABOUT dates
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\test_data.csv")
 #df['Organic Searches'].plot.kde()
+avg = df.groupby(by = ['Page Title'], as_index = False).agg({'Pageviews' : 'sum', 'Organic Searches' : 'sum'})
+df2 = df.drop_duplicates(subset=['Page Title'])
+df = pd.merge(avg, df2[['Page Title', 'date_published']], how='left', on='Page Title')
 df['log_organic'] = np.log(df['Organic Searches'] + 1)
+
+#df['log_organic'] = np.log(df['Organic Searches'] + 1)
 # df['log_organic'].plot.kde()
 df['question_mark']=0
 df['hit'] = df['log_organic'] > 1
