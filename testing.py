@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import textstat
 from tensorflow import keras
 from keras.layers import Embedding, SpatialDropout1D, LSTM
 from keras.layers import Dense
@@ -29,7 +28,8 @@ df['hit'] = df['log_organic'] > 1
 
 df['date_published'] = pd.to_datetime(df['date_published'])
 df = df[df['date_published'].dt.year >= 2020]
-
+print(df)
+print(len(df))
 #print(predictions)
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = 50000
@@ -60,14 +60,14 @@ model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
 print('layer3')
 model.add(Dense(2, activation='softmax'))
 print('layer4')
-#model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.compile(loss='BinaryCrossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+#model.compile(loss='BinaryCrossentropy', optimizer='adam', metrics=['accuracy'])
 print('layer5')
 print(X_train.shape,y_train.shape)
 print(X_test.shape,y_test.shape)
 
 # set epochs
-epochs = 2
+epochs = 5
 batch_size = 64
 
 history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size,validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
@@ -82,7 +82,7 @@ print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(accr[0],accr[1]))
 #((y_test - predictions) != 0).to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\predicted_wrong.csv")
 # print(df['hit'])
 # print(Y)
-new_headline = ['bad headline this is bad headline baddddddddddddddddddd headline']
+new_headline = ['umd suffers massive defeat']
 seq = tokenizer.texts_to_sequences(new_headline)
 padded = pad_sequences(seq, maxlen=MAX_SEQUENCE_LENGTH)
 pred = model.predict(padded)
