@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import tensorflow as tf
 from tensorflow import keras
-from keras.layers import Embedding, SpatialDropout1D, LSTM
+from keras.layers import Embedding, SpatialDropout1D, LSTM, concatenate
 from keras.layers import Dense
 from keras.models import Model
 from keras.callbacks import EarlyStopping
@@ -11,6 +12,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 from keras import Sequential
 from sklearn.model_selection import train_test_split
+import tensorflow_hub as hub
 
 # ASK ABOUT dates
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\test_data.csv")
@@ -43,6 +45,8 @@ word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
 X = tokenizer.texts_to_sequences(df['Page Title'].values)
 X = pad_sequences(X, maxlen=MAX_SEQUENCE_LENGTH)
+# print(X)
+#X = concatenate([X, df['question_mark'].to_numpy])
 
 
 print('Shape of data tensor:', X.shape)
