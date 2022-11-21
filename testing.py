@@ -14,7 +14,7 @@ from keras import Sequential
 from sklearn.model_selection import train_test_split
 import tensorflow_hub as hub
 
-# ASK ABOUT dates
+# CLEANING STEPS, MUST APPLY ALL TO MODEL USE WHEN TRAINING AND USING MODEL
 df = pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\test_data.csv")
 #df['Organic Searches'].plot.kde()
 avg = df.groupby(by = ['Page Title'], as_index = False).agg({'Pageviews' : 'sum', 'Organic Searches' : 'sum'})
@@ -26,12 +26,11 @@ df['log_organic'] = np.log(df['Organic Searches'] + 1)
 # df['log_organic'].plot.kde()
 df['question_mark']=0
 df['hit'] = df['log_organic'] > 1
-
-
 df['date_published'] = pd.to_datetime(df['date_published'])
-df = df[df['date_published'].dt.year >= 2020]
-print(df)
-print(len(df))
+
+# articles that were posted prior to the dataset should only be not considered if they have poor views
+df = df[(df['date_published'].dt.year >= 2020) | df['hit']]
+
 #print(predictions)
 # The maximum number of words to be used. (most frequent)
 MAX_NB_WORDS = 50000
@@ -40,6 +39,8 @@ MAX_SEQUENCE_LENGTH = 250
 # This is fixed.
 EMBEDDING_DIM = 100
 tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', lower=True)
+
+# MUST FIT TOKENIZER ON FULL DATASET AND MAINTAIN SAME AS USE OF MODEL
 tokenizer.fit_on_texts(df['Page Title'].values)
 word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
@@ -100,7 +101,7 @@ for val in y.columns:
 # first represents how much of a hit it is
 print(pred, labels[np.argmax(pred)])
 print(model.summary())
-model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\model.h5")
+#model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\model.h5")
 
 # plt.title('Loss')
 # plt.plot(history.history['loss'], label='train')

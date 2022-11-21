@@ -14,12 +14,19 @@ MAX_NB_WORDS =  50000
 model = keras.models.load_model(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\model.h5")
 MAX_SEQUENCE_LENGTH = 250 
 tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~', lower=True)
+
+# CLEANING STEPS *************
 df = pd.read_csv("/content/test_data.csv")
 #df['Organic Searches'].plot.kde()
 avg = df.groupby(by = ['Page Title'], as_index = False).agg({'Pageviews' : 'sum', 'Organic Searches' : 'sum'})
 df2 = df.drop_duplicates(subset=['Page Title'])
 df = pd.merge(avg, df2[['Page Title', 'date_published', 'category']], how='left', on='Page Title')
 df['log_organic'] = np.log(df['Organic Searches'] + 1)
+
+
+df['date_published'] = pd.to_datetime(df['date_published'])
+df = df[(df['date_published'].dt.year >= 2020) | df['hit']]
+# *********
 tokenizer.fit_on_texts(df['Page Title'])
 new_headline = ['titles that have never cant existed']
 
