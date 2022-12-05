@@ -18,11 +18,10 @@ df['log_organic'] = np.log(df['Organic Searches'] + 1)
 
 #df['log_organic'] = np.log(df['Organic Searches'] + 1)
 # df['log_organic'].plot.kde()
-df['question_mark']=0
 df['hit'] = df['log_organic'] > 1
 
 print(len(df))
-#df.to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\filtered_data.csv")
+df.to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\new_data_test.csv")
 # avg_sal['log_organic'] = np.log(avg_sal['Organic Searches'] + 1)
 # avg_sal['log_organic'].plot.kde()
 #plt.show()

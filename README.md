@@ -23,4 +23,5 @@ Automated wordcloud generation to visually find appealing words for hypothesis t
 # How we plan to change this
 - We categorized the articles as "hit" or "miss" depending on if they recieved more than 1 organic search within our timeframe.
 - We then used a tensorflow LSTM layered model to predict with a given article title whether or not that article would end up as a hit or miss.
-- Currently, our model has around an **80% accuracy** rate based on the test train split. This represents a significant change from a random choice of 50%.
+- Data is uneven so we needed to drop rows in order to do binary classification
+- Currently, we are experimenting with the model.
