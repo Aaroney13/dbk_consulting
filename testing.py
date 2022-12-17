@@ -129,7 +129,7 @@ full.to_csv(r"C:\Users\aaron\OneDrive\Documents\quest\full_test.csv")
 # first represents how much of a hit it is
 # print(pred, labels[np.argmax(pred)])
 print(model.summary())
-#model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\new_model.h5")
+# model.save(r"C:\Users\aaron\OneDrive\Documents\quest\dbk_consulting\new_model.h5")
 
 # plt.title('Loss')
 # plt.plot(history.history['loss'], label='train')

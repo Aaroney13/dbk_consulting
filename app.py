@@ -28,8 +28,8 @@ tokenizer = Tokenizer(num_words=MAX_NB_WORDS, filters='!"#$%&()*+,-./:;<=>?@[\]^
 # df = df[(df['date_published'].dt.year >= 2020) | df['hit']]
 df= pd.read_csv(r"C:\Users\aaron\OneDrive\Documents\quest\filtered_data.csv")
 # *********
-tokenizer.fit_on_texts(df['Page Title'])
-new_headline = ['10 months and $22,000 later, napping pods have arrived in McKeldin Library - The Diamondback']
+tokenizer.fit_on_texts(df['Page Title'].values)
+new_headline = ["l bozo"]
 
 seq = tokenizer.texts_to_sequences(new_headline)
 print(seq)
@@ -39,10 +39,11 @@ pred = model.predict(padded)
 
 #print(pred, labels[np.argmax(pred)])
 x = np.arange (0, 1, .1)
+print(pred)
 #print(nonesense[0][0])
-print(pred[0][0])
+print(pred[0][1])
 #plt.plot(nonesense[0][0], 0, 'x', color='b')
-plt.plot(pred[0][0], 0, 'x', color='r')
+plt.plot(pred[0][1], 0, 'x', color='r')
 plt.xticks(x)
 plt.show()
 
